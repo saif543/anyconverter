@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gradient-angle: 0deg;
+  }
+
+  body {
+    @apply bg-white text-neutral-800 antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(150deg, #2563eb 15%, #1e3a8a 70%, #60a5fa 94%);
+    position: relative;
+  }
+
+  .gradient-text-animated {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    position: relative;
+    /* Glass effect - text will glow when orbs pass under */
+    filter: drop-shadow(0 0 0px transparent);
+    transition: filter 0.3s ease;
+  }
+
+  .glass-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      rgba(255, 255, 255, 0.15) 100%
+    );
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+  }
+
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(150deg, #635bff 15%, #ff0080 70%, #00d4ff 94%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* Animated gradient background */
+  .animate-gradient-x {
+    animation: gradient-x 15s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  @keyframes gradient-x {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Mesh gradient animation */
+  .mesh-gradient {
+    background: radial-gradient(at 27% 37%, rgba(37, 99, 235, 0.25) 0px, transparent 50%),
+                radial-gradient(at 97% 21%, rgba(59, 130, 246, 0.2) 0px, transparent 50%),
+                radial-gradient(at 52% 99%, rgba(30, 58, 138, 0.3) 0px, transparent 50%),
+                radial-gradient(at 10% 29%, rgba(0, 0, 0, 0.4) 0px, transparent 50%),
+                radial-gradient(at 97% 96%, rgba(15, 23, 42, 0.3) 0px, transparent 50%),
+                radial-gradient(at 33% 50%, rgba(29, 78, 216, 0.2) 0px, transparent 50%),
+                radial-gradient(at 79% 53%, rgba(0, 0, 0, 0.25) 0px, transparent 50%);
+  }
+
+  /* Glass morphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .glass-dark {
+    background: rgba(10, 37, 64, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Responsive hero clip path */
+  .hero-clip {
+    clip-path: polygon(0 0, 100% 0, 100% 65%, 0 65%);
+  }
+
+  @media (min-width: 640px) {
+    .hero-clip {
+      clip-path: polygon(0 0, 100% 0, 100% 70%, 0 70%);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-clip {
+      clip-path: polygon(0 0, 100% 0, 100% 73%, 0 73%);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-clip {
+      clip-path: polygon(0 0, 100% 0, 100% 75%, 0 75%);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .hero-clip {
+      clip-path: polygon(0 0, 100% 0, 100% 75%, 0 75%);
+    }
+  }
+}
