@@ -533,6 +533,64 @@ const ShootingStars = React.memo(function ShootingStars() {
   );
 });
 
+// Left Corner Stars Component - twinkling stars in upper left corner
+const LeftCornerStars = React.memo(function LeftCornerStars() {
+  const stars = React.useMemo(() => {
+    const result = [];
+
+    // Create 25 stars concentrated in upper left corner
+    for (let i = 0; i < 25; i++) {
+      const x = Math.random() * 20; // 0-20% from left
+      const y = Math.random() * 25; // 0-25% from top
+      const size = Math.random() * 3 + 1; // 1-4px
+      const opacity = Math.random() * 0.7 + 0.3; // 0.3-1.0
+      const duration = Math.random() * 3 + 2; // 2-5 seconds twinkle
+      const delay = Math.random() * 5;
+
+      result.push({
+        id: i,
+        x,
+        y,
+        size,
+        opacity,
+        duration,
+        delay,
+      });
+    }
+
+    return result;
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {stars.map((star) => (
+        <motion.div
+          key={star.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: star.size,
+            height: star.size,
+            background: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 50%, transparent 100%)',
+            boxShadow: `0 0 ${star.size * 3}px rgba(255, 255, 255, 0.8), 0 0 ${star.size * 6}px rgba(139, 92, 246, 0.4)`,
+          }}
+          animate={{
+            opacity: [star.opacity * 0.2, star.opacity, star.opacity * 0.4, star.opacity],
+            scale: [0.8, 1.3, 0.7, 1],
+          }}
+          transition={{
+            duration: star.duration,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: star.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+});
+
 // Floating Particles Component - clustered particles with soft organic shapes
 const FloatingParticles = React.memo(function FloatingParticles() {
   const particles = React.useMemo(() => {
@@ -932,6 +990,9 @@ export default function Hero() {
 
       {/* Shooting Stars */}
       {mounted && <ShootingStars />}
+
+      {/* Left Corner Stars */}
+      {mounted && <LeftCornerStars />}
 
       {/* Subtle Grid Pattern */}
       <div className="absolute inset-0 hero-clip pointer-events-none" style={{
