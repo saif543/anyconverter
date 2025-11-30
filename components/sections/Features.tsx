@@ -57,7 +57,7 @@ export default function Features() {
           <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-4">
             Everything you need,
             <br />
-            <span className="gradient-text">nothing you don't</span>
+            <span className="gradient-text">nothing you don&apos;t</span>
           </h2>
           <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
             Powerful features designed to make file conversion effortless and delightful.

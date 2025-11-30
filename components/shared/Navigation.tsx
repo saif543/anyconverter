@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Zap, Image, FileText, Video, Music, Archive } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -36,14 +37,14 @@ export default function Navigation() {
             whileHover={{ scale: 1.05 }}
             className="flex items-center"
           >
-            <a href="/" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">C</span>
               </div>
               <span className="text-xl font-semibold text-white">
                 ConvertFlow
               </span>
-            </a>
+            </Link>
           </motion.div>
 
           {/* Desktop Navigation */}

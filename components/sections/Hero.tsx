@@ -233,7 +233,7 @@ const InteractiveGradientText = ({ text, globalMousePos }: { text: string; globa
 };
 
 // Sun Rays Component - 3D animated purple-blue rays emanating from outside corner
-const SunRays = React.memo(() => {
+const SunRays = React.memo(function SunRays() {
   const rays = React.useMemo(() => {
     const result = [];
 
@@ -314,7 +314,7 @@ const SunRays = React.memo(() => {
 });
 
 // 3D Light Particles emanating from outside corner
-const LightParticles = React.memo(() => {
+const LightParticles = React.memo(function LightParticles() {
   const particles = React.useMemo(() => {
     const result = [];
 
@@ -389,7 +389,7 @@ const LightParticles = React.memo(() => {
 });
 
 // Static Stars Component - twinkling stars in background
-const StaticStars = React.memo(() => {
+const StaticStars = React.memo(function StaticStars() {
   const stars = React.useMemo(() => {
     const result = [];
 
@@ -447,7 +447,7 @@ const StaticStars = React.memo(() => {
 });
 
 // Shooting Stars Component - stars shooting from entire left side
-const ShootingStars = React.memo(() => {
+const ShootingStars = React.memo(function ShootingStars() {
   const stars = React.useMemo(() => {
     const result = [];
 
@@ -534,7 +534,7 @@ const ShootingStars = React.memo(() => {
 });
 
 // Floating Particles Component - clustered particles with soft organic shapes
-const FloatingParticles = React.memo(() => {
+const FloatingParticles = React.memo(function FloatingParticles() {
   const particles = React.useMemo(() => {
     const result = [];
 
@@ -893,7 +893,7 @@ export default function Hero() {
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
