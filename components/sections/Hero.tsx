@@ -417,7 +417,7 @@ const StaticStars = React.memo(function StaticStars() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none">
       {stars.map((star) => (
         <motion.div
           key={star.id}
@@ -492,7 +492,7 @@ const ShootingStars = React.memo(function ShootingStars() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none">
       {stars.map((star) => (
         <motion.div
           key={star.id}
@@ -562,7 +562,7 @@ const LeftCornerStars = React.memo(function LeftCornerStars() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none">
       {stars.map((star) => (
         <motion.div
           key={star.id}
@@ -958,9 +958,9 @@ export default function Hero() {
       {/* Glass-like Background with Grid - ends at middle of drop card */}
       <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-black to-neutral-950 hero-clip pointer-events-none z-0" />
 
-      {/* Purple-blue light source from top-right corner fading to black */}
+      {/* Purple-blue light source from top-right corner fading to black - Hidden on mobile */}
       {mounted && (
-        <div className="absolute inset-0 pointer-events-none z-10" style={{ overflow: 'hidden', perspective: '1200px', transformStyle: 'preserve-3d' }}>
+        <div className="hidden md:block absolute inset-0 pointer-events-none z-10" style={{ overflow: 'hidden', perspective: '1200px', transformStyle: 'preserve-3d' }}>
           {/* Simple purple-blue light radiating from corner point */}
           <motion.div
             className="absolute inset-0"
