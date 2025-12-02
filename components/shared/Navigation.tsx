@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, Zap, Image, FileText, Video, Music, Archive } from 'lucide-react';
+import { Menu, X, ChevronDown, Zap, Image, FileText, Video, Music, Archive, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Navigation() {
@@ -52,12 +52,13 @@ export default function Navigation() {
             <DropdownMenu
               title="Tools"
               items={[
-                { icon: Image, label: 'Image Converter', desc: 'JPG, PNG, WEBP, SVG', href: '#image' },
-                { icon: Video, label: 'Video Converter', desc: 'MP4, AVI, MOV, WEBM', href: '#video' },
-                { icon: Music, label: 'Audio Converter', desc: 'MP3, WAV, AAC, FLAC', href: '#audio' },
-                { icon: FileText, label: 'Document Converter', desc: 'PDF, DOCX, TXT', href: '#document' },
-                { icon: Archive, label: 'Archive Tools', desc: 'ZIP, RAR, 7Z', href: '#archive' },
-                { icon: Zap, label: 'Batch Convert', desc: 'Convert multiple files', href: '#batch' },
+                { icon: Image, label: 'Image Converter', desc: 'JPG, PNG, WEBP, SVG', href: '/image-converter' },
+                { icon: Video, label: 'Video Converter', desc: 'MP4, AVI, MOV, WEBM', href: '/video-converter' },
+                { icon: Music, label: 'Audio Converter', desc: 'MP3, WAV, AAC, FLAC', href: '/audio-converter' },
+                { icon: FileText, label: 'Document Converter', desc: 'PDF, DOCX, TXT', href: '/document-converter' },
+                { icon: Archive, label: 'Archive Tools', desc: 'ZIP, RAR, 7Z', href: '/archive-tools' },
+                { icon: Zap, label: 'Batch Convert', desc: 'Convert multiple files', href: '/batch-convert' },
+                { icon: Sparkles, label: 'AI Tools', desc: 'AI-powered enhancements', href: '/ai-tools' },
               ]}
               activeDropdown={activeDropdown}
               setActiveDropdown={setActiveDropdown}
@@ -111,9 +112,20 @@ export default function Navigation() {
             className="md:hidden bg-neutral-900 border-t border-neutral-800 overflow-hidden"
           >
             <div className="px-4 py-4 space-y-3">
+              <MobileDropdown
+                title="Tools"
+                items={[
+                  { icon: Image, label: 'Image Converter', href: '/image-converter' },
+                  { icon: Video, label: 'Video Converter', href: '/video-converter' },
+                  { icon: Music, label: 'Audio Converter', href: '/audio-converter' },
+                  { icon: FileText, label: 'Document Converter', href: '/document-converter' },
+                  { icon: Archive, label: 'Archive Tools', href: '/archive-tools' },
+                  { icon: Zap, label: 'Batch Convert', href: '/batch-convert' },
+                  { icon: Sparkles, label: 'AI Tools', href: '/ai-tools' },
+                ]}
+              />
               <MobileNavLink href="#features">Features</MobileNavLink>
               <MobileNavLink href="#pricing">Pricing</MobileNavLink>
-              <MobileNavLink href="#tools">Tools</MobileNavLink>
               <MobileNavLink href="#api">API</MobileNavLink>
               <div className="pt-4 space-y-2">
                 <button className="w-full px-4 py-2.5 text-sm font-medium text-neutral-300 border border-neutral-700 rounded-lg hover:bg-neutral-800 transition-colors">
@@ -158,6 +170,59 @@ function MobileNavLink({ href, children }: { href: string; children: React.React
     >
       {children}
     </a>
+  );
+}
+
+interface MobileDropdownItem {
+  icon: any;
+  label: string;
+  href: string;
+}
+
+function MobileDropdown({ title, items }: { title: string; items: MobileDropdownItem[] }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white rounded-lg transition-colors"
+      >
+        <span>{title}</span>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ChevronDown className="w-4 h-4" />
+        </motion.div>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mt-2 ml-4 space-y-1 overflow-hidden"
+          >
+            {items.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={index}
+                  href={item.href}
+                  className="flex items-center gap-3 px-4 py-2 text-sm text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-lg transition-colors"
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </a>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 

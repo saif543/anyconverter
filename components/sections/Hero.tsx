@@ -120,7 +120,6 @@ const InteractiveText = ({ text, className, globalMousePos }: { text: string; cl
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-            filter: 'drop-shadow(0 4px 8px rgba(139, 92, 246, 0.3))',
             WebkitMaskImage: `radial-gradient(circle 100px at ${localMousePos.x}px ${localMousePos.y}px, transparent 0%, transparent 35%, black 50%, black 100%)`,
             maskImage: `radial-gradient(circle 100px at ${localMousePos.x}px ${localMousePos.y}px, transparent 0%, transparent 35%, black 50%, black 100%)`,
           }}
@@ -138,7 +137,6 @@ const InteractiveText = ({ text, className, globalMousePos }: { text: string; cl
             bottom: 0,
             color: 'transparent',
             WebkitTextStroke: '1.5px #06b6d4',
-            textShadow: '0 0 20px rgba(6, 182, 212, 0.6)',
             WebkitMaskImage: `radial-gradient(circle 100px at ${localMousePos.x}px ${localMousePos.y}px, black 0%, black 35%, transparent 50%, transparent 100%)`,
             maskImage: `radial-gradient(circle 100px at ${localMousePos.x}px ${localMousePos.y}px, black 0%, black 35%, transparent 50%, transparent 100%)`,
             transform: 'translateZ(20px)',
@@ -179,7 +177,7 @@ const InteractiveGradientText = ({ text, globalMousePos }: { text: string; globa
   return (
     <span
       ref={containerRef}
-      className="inline-block relative cursor-pointer text-5xl sm:text-6xl lg:text-7xl font-bold"
+      className="inline-block relative cursor-pointer text-4xl sm:text-5xl lg:text-6xl font-bold"
       style={{
         perspective: '1000px',
         transformStyle: 'preserve-3d',
@@ -674,7 +672,7 @@ const FloatingParticles = React.memo(function FloatingParticles() {
   }, []);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none hero-clip" style={{ perspective: '1000px' }}>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ perspective: '1000px' }}>
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
@@ -717,99 +715,173 @@ const FloatingParticles = React.memo(function FloatingParticles() {
   );
 });
 
-// Enhanced Drop Card with 3D tilt effect
-const EnhancedDropCard = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      const tiltX = ((y - centerY) / centerY) * -10; // Inverted for natural feel
-      const tiltY = ((x - centerX) / centerX) * 10;
-
-      gsap.to(card, {
-        rotateX: tiltX,
-        rotateY: tiltY,
-        duration: 0.5,
-        ease: 'power2.out',
-      });
-
-      setTilt({ x: tiltX, y: tiltY });
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to(card, {
-        rotateX: 0,
-        rotateY: 0,
-        duration: 0.5,
-        ease: 'power2.out',
-      });
-      setTilt({ x: 0, y: 0 });
-    };
-
-    card.addEventListener('mousemove', handleMouseMove);
-    card.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      card.removeEventListener('mousemove', handleMouseMove);
-      card.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
-
+// Enhanced Drop Card - no hover effect
+const EnhancedDropCard = ({ onSelectSource }: { onSelectSource?: (type: 'device' | 'drive' | 'dropbox' | 'onedrive' | 'url') => void }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.5 }}
-      className="mt-20"
-      style={{ perspective: '1000px' }}
+      transition={{ duration: 0.8, delay: 0.4 }}
+      className="w-full"
     >
-      <div className="relative mx-auto max-w-4xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 blur-3xl opacity-20 animate-pulse" />
-        <div
-          ref={cardRef}
-          className="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-neutral-200 transition-all"
-          style={{
-            transformStyle: 'preserve-3d',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+      <div className="relative w-full">
+        {/* Animated gradient border */}
+        <motion.div
+          className="absolute -inset-[1px] rounded-3xl"
+          animate={{
+            background: [
+              'linear-gradient(150deg, rgba(6, 182, 212, 0.5), rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5))',
+              'linear-gradient(150deg, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5))',
+              'linear-gradient(150deg, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5), rgba(6, 182, 212, 0.5))',
+              'linear-gradient(150deg, rgba(236, 72, 153, 0.5), rgba(6, 182, 212, 0.5), rgba(59, 130, 246, 0.5))',
+            ]
           }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-            </div>
-            <div className="text-sm text-neutral-500">ConvertFlow.app</div>
-          </div>
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
 
+        <div
+          className="relative bg-neutral-900 backdrop-blur-xl rounded-3xl p-8 border-0"
+        >
           {/* Drag & Drop Zone */}
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="border-2 border-dashed border-neutral-300 rounded-xl p-12 text-center bg-gradient-to-br from-neutral-50 to-white cursor-pointer hover:border-cyan-500 transition-all group"
-            style={{ transform: 'translateZ(20px)' }}
-          >
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-16 h-16 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-cyan-500/20 group-hover:to-purple-500/20 transition-all"
+          <div className="relative overflow-hidden rounded-2xl group">
+            {/* Gradient border effect */}
+            <div className="absolute -inset-[2px] bg-gradient-to-br from-cyan-500/50 via-violet-500/50 to-pink-500/50 rounded-2xl transition-all"></div>
+
+            <div
+              onClick={() => onSelectSource?.('device')}
+              className="relative bg-black backdrop-blur-xl rounded-2xl px-16 py-8 text-center cursor-pointer border-2 border-dashed border-cyan-500/30 hover:border-violet-400/60 transition-all duration-300"
             >
-              <Upload className="w-8 h-8 text-cyan-600 group-hover:text-purple-600 transition-colors" />
-            </motion.div>
-            <h3 className="text-xl font-semibold text-neutral-800 mb-2">
-              Drop files here or click to upload
-            </h3>
-            <p className="text-neutral-500">Supports 200+ formats • Max 10GB per file</p>
-          </motion.div>
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/0 via-violet-600/0 to-pink-600/0 group-hover:from-cyan-600/10 group-hover:via-violet-600/8 group-hover:to-pink-600/10 transition-all duration-500 rounded-2xl"></div>
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-center gap-8 mb-6">
+                  <motion.div
+                    animate={{
+                      y: [0, -12, 0],
+                      rotate: [0, 5, -5, 0]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="w-16 h-16 relative flex-shrink-0"
+                  >
+                    <div className="relative w-full h-full bg-gradient-to-br from-cyan-500/20 via-violet-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center border border-violet-400/30">
+                      <Upload className="w-8 h-8 text-violet-400 group-hover:text-violet-300 transition-colors" />
+                    </div>
+                  </motion.div>
+
+                  <div className="text-left">
+                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:via-violet-400 group-hover:to-pink-400 transition-all">
+                      Drop your files here
+                    </h3>
+                    <p className="text-neutral-400 text-sm">
+                      or <span className="text-violet-400 font-semibold hover:text-violet-300 transition-colors">choose a file</span> from your device
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                  <span className="text-xs text-neutral-600 font-medium uppercase tracking-widest">or import from</span>
+                  <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                </div>
+
+                {/* Upload Source Options */}
+                <div className="flex items-center justify-center gap-4">
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.5 }}
+                    whileHover={{ scale: 1.08, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSource?.('drive');
+                    }}
+                    className="relative group/btn"
+                    title="Google Drive"
+                  >
+                    <div className="relative flex flex-col items-center justify-center w-20 h-20 rounded-xl bg-gradient-to-br from-white/10 to-white/5 hover:from-cyan-500/20 hover:via-violet-500/20 hover:to-pink-500/20 border border-white/20 group-hover/btn:border-violet-400/70 transition-all backdrop-blur-sm">
+                      <svg className="w-7 h-7 text-neutral-500 group-hover/btn:text-violet-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                      </svg>
+                      <span className="text-[11px] text-neutral-600 group-hover/btn:text-neutral-400 mt-2 font-medium">Drive</span>
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.6 }}
+                    whileHover={{ scale: 1.08, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSource?.('dropbox');
+                    }}
+                    className="relative group/btn"
+                    title="Dropbox"
+                  >
+                    <div className="relative flex flex-col items-center justify-center w-20 h-20 rounded-xl bg-gradient-to-br from-white/10 to-white/5 hover:from-cyan-500/20 hover:via-violet-500/20 hover:to-pink-500/20 border border-white/20 group-hover/btn:border-violet-400/70 transition-all backdrop-blur-sm">
+                      <svg className="w-7 h-7 text-neutral-500 group-hover/btn:text-violet-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.004 2.25l-6.004 10.5h4.004v9l6.004-10.5h-4.004v-9z"/>
+                      </svg>
+                      <span className="text-[11px] text-neutral-600 group-hover/btn:text-neutral-400 mt-2 font-medium">Dropbox</span>
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.7 }}
+                    whileHover={{ scale: 1.08, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSource?.('onedrive');
+                    }}
+                    className="relative group/btn"
+                    title="OneDrive"
+                  >
+                    <div className="relative flex flex-col items-center justify-center w-20 h-20 rounded-xl bg-gradient-to-br from-white/10 to-white/5 hover:from-cyan-500/20 hover:via-violet-500/20 hover:to-pink-500/20 border border-white/20 group-hover/btn:border-violet-400/70 transition-all backdrop-blur-sm">
+                      <svg className="w-7 h-7 text-neutral-500 group-hover/btn:text-violet-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-3H8v-2h3V9h2v3h3v2h-3v3h-2z"/>
+                      </svg>
+                      <span className="text-[11px] text-neutral-600 group-hover/btn:text-neutral-400 mt-2 font-medium">OneDrive</span>
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration:0.4, delay: 0.8 }}
+                    whileHover={{ scale: 1.08, y: -4 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSource?.('url');
+                    }}
+                    className="relative group/btn"
+                    title="From URL"
+                  >
+                    <div className="relative flex flex-col items-center justify-center w-20 h-20 rounded-xl bg-gradient-to-br from-white/10 to-white/5 hover:from-cyan-500/20 hover:via-violet-500/20 hover:to-pink-500/20 border border-white/20 group-hover/btn:border-violet-400/70 transition-all backdrop-blur-sm">
+                      <svg className="w-7 h-7 text-neutral-500 group-hover/btn:text-violet-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      <span className="text-[11px] text-neutral-600 group-hover/btn:text-neutral-400 mt-2 font-medium">URL</span>
+                    </div>
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -925,7 +997,11 @@ const EnhancedButton = ({
   );
 };
 
-export default function Hero() {
+interface HeroProps {
+  onSelectSource?: (type: 'device' | 'drive' | 'dropbox' | 'onedrive' | 'url') => void;
+}
+
+export default function Hero({ onSelectSource }: HeroProps) {
   const [mounted, setMounted] = useState(false);
   const [globalMousePos, setGlobalMousePos] = useState({ x: -1000, y: -1000 });
   const mouseX = useMotionValue(0);
@@ -954,13 +1030,13 @@ export default function Hero() {
   }, [mouseX, mouseY]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Glass-like Background with Grid - ends at middle of drop card */}
-      <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-black to-neutral-950 hero-clip pointer-events-none z-0" />
+    <section className="relative min-h-screen flex items-center justify-center overflow-x-hidden">
+      {/* Glass-like Background with Grid */}
+      <div className="absolute inset-0 min-h-full bg-gradient-to-b from-neutral-950 via-black to-neutral-950 pointer-events-none z-0" />
 
       {/* Purple-blue light source from top-right corner fading to black - Hidden on mobile */}
       {mounted && (
-        <div className="hidden md:block absolute inset-0 pointer-events-none z-10" style={{ overflow: 'hidden', perspective: '1200px', transformStyle: 'preserve-3d' }}>
+        <div className="absolute inset-0 pointer-events-none z-10 hidden md:block" style={{ overflow: 'hidden', perspective: '1200px', transformStyle: 'preserve-3d' }}>
           {/* Simple purple-blue light radiating from corner point */}
           <motion.div
             className="absolute inset-0"
@@ -995,7 +1071,7 @@ export default function Hero() {
       {mounted && <LeftCornerStars />}
 
       {/* Subtle Grid Pattern */}
-      <div className="absolute inset-0 hero-clip pointer-events-none" style={{
+      <div className="absolute inset-0 pointer-events-none" style={{
         backgroundImage: `
           linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
           linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px)
@@ -1003,135 +1079,123 @@ export default function Hero() {
         backgroundSize: '50px 50px'
       }} />
 
-      {/* Gradient Orbs - purple blue combination */}
-      <motion.div
-        animate={{
-          scale: [1, 1.15, 1],
-          opacity: [0.1, 0.15, 0.1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"
-      />
-      <motion.div
-        animate={{
-          scale: [1.15, 1, 1.15],
-          opacity: [0.1, 0.15, 0.1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2,
-        }}
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"
-      />
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-        <div className="text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center space-x-2 bg-blue-600/20 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-blue-500/30 mb-8"
-          >
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-medium text-blue-100">
-              AI-Powered File Conversion
-            </span>
-          </motion.div>
+      {/* Content - Two column layout */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+        <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between gap-16 lg:gap-12">
 
-          {/* Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-          >
-            <span className="text-white block">Convert files with</span>
-            <InteractiveGradientText text="beautiful simplicity" globalMousePos={globalMousePos} />
-          </motion.h1>
+          {/* Left side - Text content */}
+          <div className="text-center lg:text-left flex-shrink-0 lg:max-w-xl">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10 mb-8"
+            >
+              <Sparkles className="w-4 h-4 text-violet-400" />
+              <span className="text-sm font-medium text-neutral-300">
+                200+ formats supported
+              </span>
+            </motion.div>
 
-          {/* Subheading */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg sm:text-xl max-w-2xl mx-auto mb-12 leading-relaxed text-neutral-300"
-          >
-            The most beautiful file conversion platform. Lightning fast, AI-powered, and designed to delight. Convert images, videos, documents, and more.
-          </motion.p>
+            {/* Main Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-[1.1] tracking-tight"
+            >
+              <span className="text-white block mb-2">Transform any file</span>
+              <InteractiveGradientText text="in seconds" globalMousePos={globalMousePos} />
+            </motion.h1>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-          >
-            <EnhancedButton primary={true}>
-              <Upload className="w-5 h-5" />
-              <span>Start Converting Free</span>
-              <ArrowRight className="w-5 h-5" />
-            </EnhancedButton>
+            {/* Subheading */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg sm:text-xl max-w-lg mx-auto lg:mx-0 mb-10 leading-relaxed text-neutral-400"
+            >
+              Drop your files and watch the magic happen. Fast, secure, and completely free. No signup required.
+            </motion.p>
 
-            <EnhancedButton primary={false}>
-              <span>View Demo</span>
-            </EnhancedButton>
-          </motion.div>
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4"
+            >
+              <EnhancedButton primary={true}>
+                <Upload className="w-5 h-5" />
+                <span>Start Converting</span>
+                <ArrowRight className="w-5 h-5" />
+              </EnhancedButton>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-12"
-          >
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">10M+</div>
-              <div className="text-sm text-neutral-400">Files Converted</div>
-            </div>
-            <div className="hidden sm:block w-px h-12 bg-neutral-700" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">200+</div>
-              <div className="text-sm text-neutral-400">File Formats</div>
-            </div>
-            <div className="hidden sm:block w-px h-12 bg-neutral-700" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">4.9★</div>
-              <div className="text-sm text-neutral-400">User Rating</div>
-            </div>
-          </motion.div>
+              <EnhancedButton primary={false}>
+                <span>See How It Works</span>
+              </EnhancedButton>
+            </motion.div>
+
+            {/* Trust indicators */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="mt-10 flex items-center justify-center lg:justify-start gap-6 text-sm text-neutral-500"
+            >
+              <span className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                No signup needed
+              </span>
+              <span className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                100% free
+              </span>
+              <span className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Secure
+              </span>
+            </motion.div>
+          </div>
+
+          {/* Right side - Drop Card */}
+          <div className="flex-1 w-full lg:max-w-lg">
+            <EnhancedDropCard onSelectSource={onSelectSource} />
+          </div>
         </div>
-
-        {/* Enhanced Drop Card with 3D effects */}
-        <EnhancedDropCard />
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Stats - Bottom center horizontal */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 pointer-events-none"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="absolute bottom-8 left-0 right-0 hidden md:flex flex-row items-center justify-center gap-12 z-20"
       >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-neutral-400 rounded-full flex items-start justify-center p-2"
-        >
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1.5 h-1.5 bg-neutral-400 rounded-full"
-          />
-        </motion.div>
+        <div className="text-center">
+          <div className="text-3xl font-bold text-white mb-1">10M+</div>
+          <div className="text-sm text-neutral-400">Files Converted</div>
+        </div>
+        <div className="w-px h-12 bg-neutral-700" />
+        <div className="text-center">
+          <div className="text-3xl font-bold text-white mb-1">200+</div>
+          <div className="text-sm text-neutral-400">File Formats</div>
+        </div>
+        <div className="w-px h-12 bg-neutral-700" />
+        <div className="text-center">
+          <div className="text-3xl font-bold text-white mb-1">4.9★</div>
+          <div className="text-sm text-neutral-400">User Rating</div>
+        </div>
       </motion.div>
+
     </section>
   );
 }
